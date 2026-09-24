@@ -1,1 +1,1 @@
-# Runtime dependencies intentionally kept empty for the first deterministic release.
+# Runtime dependencies are intentionally empty in v0.1.
