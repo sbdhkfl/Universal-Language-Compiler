@@ -108,3 +108,21 @@ The local AI runs on your own computer rather than sending the programming reque
 AI-generated code can contain mistakes. **Always review and test generated code before running it.** ULC does not automatically execute generated programs.
 
 Never put passwords, API keys, access tokens, or private tokens into prompts or generated source code.
+
+## Zero-setup start on Windows
+
+For normal use, you should not need to manually install Python packages or Ollama.
+
+**Just double-click START.bat.**
+
+It will:
+1. Check for Python.
+2. Install Python 3.12 for your Windows user if it is missing and Windows Package Manager is available.
+3. Install the compiler.
+4. Check for Ollama and install it if needed.
+5. Download the local coding model when needed.
+6. Start the compiler.
+7. Open Chrome automatically.
+
+After the first setup, future starts are simply another double-click on START.bat.
+
