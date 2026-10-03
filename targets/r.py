@@ -1,6 +1,6 @@
 def q(v): return '"'+v.replace('\\','\\\\').replace('"','\\\"')+'"' if isinstance(v,str) else str(v)
 def generate(p):
-    out=['set.seed(NULL)']
+    out=[]
     for o in p.operations:
         d=o.data
         if o.kind=='comment': out.append('# '+d['value'])
