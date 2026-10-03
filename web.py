@@ -4,6 +4,7 @@ import html, json, webbrowser, os, shutil, subprocess
 from urllib.parse import parse_qs, urlparse
 from core.translator import translate
 from core.ai_translator import generate_with_local_ai
+from core.local_ai_manager import ensure_ollama
 from targets import NAMES
 
 HOST, PORT = "127.0.0.1", 8765
@@ -63,6 +64,8 @@ def render(text,target,result):
     return PAGE.replace("TARGETS",opts).replace('name="text" placeholder="Example: make a program that prints Hello World"></textarea>',f'name="text" placeholder="Example: make a program that prints Hello World">{html.escape(text)}</textarea>').replace("RESULT",result_html)
 
 if __name__ == "__main__":
+    ai_ok, ai_message = ensure_ollama()
+    print("Local AI: ready" if ai_ok else "Local AI: " + ai_message)
     server=ThreadingHTTPServer((HOST,PORT),Handler)
     url=f"http://{HOST}:{PORT}"
     print(f"Universal Language Compiler: {url}")
