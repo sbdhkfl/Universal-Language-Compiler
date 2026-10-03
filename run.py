@@ -1,5 +1,4 @@
-from core.translator import translate
+import runpy
 
 if __name__ == "__main__":
-    print("Universal Language Compiler")
-    print(translate("make a program that prints Hello World", "python"))
+    runpy.run_path("web.py", run_name="__main__")
