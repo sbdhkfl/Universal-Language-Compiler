@@ -1,11 +1,35 @@
 """Browser interface for the Universal Language Compiler."""
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-import html, json, webbrowser
+import html, json, webbrowser, os, shutil, subprocess
 from urllib.parse import parse_qs, urlparse
 from core.translator import translate
 from targets import NAMES
 
 HOST, PORT = "127.0.0.1", 8765
+
+def open_chrome(url):
+    """Open the dashboard in Google Chrome when it is installed."""
+    chrome_names = ["chrome", "google-chrome", "google-chrome-stable", "chromium", "chromium-browser"]
+
+    for name in chrome_names:
+        executable = shutil.which(name)
+        if executable:
+            subprocess.Popen([executable, url])
+            return
+
+    if os.name == "nt":
+        windows_paths = [
+            os.path.expandvars(r"%ProgramFiles%\\Google\\Chrome\\Application\\chrome.exe"),
+            os.path.expandvars(r"%ProgramFiles(x86)%\\Google\\Chrome\\Application\\chrome.exe"),
+            os.path.expandvars(r"%LocalAppData%\\Google\\Chrome\\Application\\chrome.exe"),
+        ]
+        for executable in windows_paths:
+            if os.path.exists(executable):
+                subprocess.Popen([executable, url])
+                return
+
+    # Last resort if Chrome cannot be found.
+    webbrowser.open(url)
 
 PAGE = """<!doctype html><html><head><meta charset="utf-8"><title>Universal Language Compiler</title>
 <style>body{font-family:Arial;max-width:950px;margin:40px auto;padding:0 20px;background:#f5f7fb}textarea,select,button{font:inherit}textarea{width:100%;height:170px;padding:12px}select,button{padding:11px;margin-top:10px}button{cursor:pointer}pre{background:#111;color:#eee;padding:18px;overflow:auto;border-radius:8px}.card{background:white;padding:24px;border-radius:14px;box-shadow:0 2px 12px #0001}h1{margin-top:0}.error{color:#b00020}</style></head>
