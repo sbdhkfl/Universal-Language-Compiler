@@ -41,6 +41,14 @@ Generated code is never executed automatically. Review and test it before compil
 MIT.
 
 
+## Broad English mode
+
+The original deterministic parser is still included for fast, predictable simple commands. For normal English requests such as "build a calculator", "make a to-do app", "create a game", or other larger descriptions, the browser can use a local coding AI through Ollama.
+
+On Windows, run setup_ai.bat once. It installs Ollama when possible and downloads the local coding model. Then run the project normally.
+
+The local AI runs on your computer instead of sending your code request to a paid cloud API. Because AI-generated code can contain mistakes, review and test generated code before running it.
+
 ## Run in VS Code
 1. Open this repository folder in VS Code.
 2. Install the recommended Python extension.
