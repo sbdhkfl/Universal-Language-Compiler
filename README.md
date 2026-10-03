@@ -39,3 +39,11 @@ Generated code is never executed automatically. Review and test it before compil
 ## License
 
 MIT.
+
+
+## Run in VS Code
+1. Open this repository folder in VS Code.
+2. Install the recommended Python extension.
+3. Run **Terminal → Run Task → ULC: install** once.
+4. Press **F5** and choose **Run Universal Language Compiler**.
+5. To check everything, run **Terminal → Run Task → ULC: tests**.
