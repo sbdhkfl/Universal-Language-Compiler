@@ -18,25 +18,12 @@ if errorlevel 1 (
 )
 
 python -m pip install -e .
-
-where ollama >nul 2>nul
-if errorlevel 1 if exist "%LocalAppData%\Programs\Ollama\ollama.exe" set "PATH=%LocalAppData%\Programs\Ollama;%PATH%"
-where ollama >nul 2>nul
 if errorlevel 1 (
-  echo Ollama not found. Installing automatically...
-  winget install --id Ollama.Ollama -e --scope user --accept-source-agreements --accept-package-agreements
-  if errorlevel 1 (
-    echo Ollama installation failed.
-    pause
-    exit /b 1
-  )
-  set "PATH=%LocalAppData%\Programs\Ollama;%PATH%"
+  echo Project installation failed.
+  pause
+  exit /b 1
 )
 
-echo Starting local AI...
-python -m core.local_ai_manager
-if errorlevel 1 echo Local AI startup check failed. The browser will still open.
-
-echo Opening Chrome...
+echo Starting translator...
 python run.py
 pause
