@@ -12,7 +12,7 @@ def generate(p):
         elif o.kind=='repeat_print': out += [f'    for _ in 0..{d["count"]} {{',f'        println!({q(d["value"])});','    }']
         elif o.kind=='while_print': out += [f'    while {d["name"]} {d["op"]} {q(d["compare"])} {{',f'        println!({q(d["value"])});','    }']
         elif o.kind=='sleep': out.append(f'    thread::sleep(time::Duration::from_millis({int(d["seconds"]*1000)}));')
-        elif o.kind=='random': out.append(f'    let {d["name"]} = {d["low"]}; // deterministic placeholder; add a rand crate for true randomness')
+        elif o.kind=='random': out.append(f'    let {d["name"]} = {d["low"]}; // add rand crate for true randomness')
         elif o.kind=='clear': out.append('    print!("\\x1b[2J\\x1b[H");')
         elif o.kind=='create_table': out.append('    // SQL CREATE TABLE '+d['name'])
     out.append('}')
