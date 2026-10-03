@@ -3,6 +3,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import html, json, webbrowser, os, shutil, subprocess
 from urllib.parse import parse_qs, urlparse
 from core.translator import translate
+from core.ai_translator import generate_with_local_ai
 from targets import NAMES
 
 HOST, PORT = "127.0.0.1", 8765
@@ -34,7 +35,7 @@ def open_chrome(url):
 PAGE = """<!doctype html><html><head><meta charset="utf-8"><title>Universal Language Compiler</title>
 <style>body{font-family:Arial;max-width:950px;margin:40px auto;padding:0 20px;background:#f5f7fb}textarea,select,button{font:inherit}textarea{width:100%;height:170px;padding:12px}select,button{padding:11px;margin-top:10px}button{cursor:pointer}pre{background:#111;color:#eee;padding:18px;overflow:auto;border-radius:8px}.card{background:white;padding:24px;border-radius:14px;box-shadow:0 2px 12px #0001}h1{margin-top:0}.error{color:#b00020}</style></head>
 <body><div class="card"><h1>Universal Language Compiler</h1><p>Tell it what you want to build, then choose the language.</p>
-<form method="post"><textarea name="text" placeholder="Example: make a program that prints Hello World"></textarea><br>
+<form method="post"><textarea name="text" placeholder="Example: Build a calculator with buttons for add, subtract, multiply, and divide"></textarea><br>
 <select name="target">TARGETS</select><br><button>GENERATE CODE</button></form>RESULT</div></body></html>"""
 
 class Handler(BaseHTTPRequestHandler):
@@ -45,8 +46,13 @@ class Handler(BaseHTTPRequestHandler):
         text=data.get("text",[""])[0].strip(); target=data.get("target",["python"])[0]
         result=""
         if text:
-            try: result=translate(text,target)
-            except Exception as e: result='<div class="error"><b>Could not generate code:</b> '+html.escape(str(e))+'</div>'
+            try:
+                result=translate(text,target)
+            except Exception:
+                try:
+                    result=generate_with_local_ai(text,target)
+                except Exception as e:
+                    result='<div class="error"><b>Could not generate code:</b> '+html.escape(str(e))+'</div>'
         self.respond(render(text,target,result))
     def respond(self,body):
         raw=body.encode(); self.send_response(200); self.send_header("Content-Type","text/html; charset=utf-8"); self.send_header("Content-Length",str(len(raw))); self.end_headers(); self.wfile.write(raw)
