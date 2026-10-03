@@ -44,6 +44,11 @@ MIT.
 ## Run in VS Code
 1. Open this repository folder in VS Code.
 2. Install the recommended Python extension.
-3. Run **Terminal → Run Task → ULC: install** once.
-4. Press **F5** and choose **Run Universal Language Compiler**.
-5. To check everything, run **Terminal → Run Task → ULC: tests**.
+3. Install the project with python -m pip install -e .
+4. Press F5 and choose Run Universal Language Compiler.
+5. Chrome opens automatically.
+6. Type what you want to build.
+7. Pick the programming language from the dropdown.
+8. Press GENERATE CODE and copy the result.
+
+You do not need to use the terminal for normal use anymore. The browser is the main interface.
