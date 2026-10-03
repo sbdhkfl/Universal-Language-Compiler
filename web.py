@@ -36,7 +36,7 @@ if __name__ == "__main__":
     server=ThreadingHTTPServer((HOST,PORT),Handler)
     url=f"http://{HOST}:{PORT}"
     print(f"Universal Language Compiler: {url}")
-    webbrowser.open(url)
+    open_chrome(url)
     try: server.serve_forever()
     except KeyboardInterrupt: pass
     finally: server.server_close()
