@@ -1,16 +1,16 @@
 # Universal Language Compiler
 
-Translate controlled human-language programming instructions into 10 programming languages.
+A deterministic human-language programming translator. You write supported instructions in normal English and choose one of 10 target languages.
 
 ## Targets
 
 Python, C, C++, Java, C#, JavaScript, Visual Basic, SQL, R, Rust.
 
-## Pipeline
+## Important: no AI is required
 
-Human language -> parser -> Universal Intermediate Representation (IR) -> target backend -> generated source.
+ULC is intentionally back to the original deterministic design. It does **not** require Ollama, a local AI model, a cloud API, or an internet connection for translation.
 
-The first release is deterministic and intentionally rejects ambiguous instructions. Future versions can add local NLP models, Tree-sitter parsing, LLVM/WebAssembly backends, and CPU-specific machine-code toolchains.
+That makes the translator predictable and lightweight. The tradeoff is simple: it can understand the English command patterns documented here, but it cannot magically understand an unlimited arbitrary software specification. Add a new parser rule when you want a new deterministic command.
 
 ## Quick start
 
@@ -21,108 +21,132 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 python -m cli.main translate "print hello world" --target python
-python -m cli.main translate "create a variable called speed equal to 100" --target cpp
+python -m cli.main translate "set speed equal to 100; increase speed by 10; print done" --target cpp
 ```
 
 On Windows use `.venv\\Scripts\\activate`.
 
-## Supported instructions
+## Browser mode
 
-- print/display/say text
-- create or assign variables
-- simple if comparisons with print
-- simple repeat loops
-- SQL table creation
+Double-click `START.bat`. It checks for Python, installs the project, starts the local web interface, and opens Chrome.
+
+No Ollama setup is needed.
+
+## Supported English commands
+
+### Output
+
+- `print hello world`
+- `display hello world`
+- `say hello world`
+- `show hello world`
+- `output hello world`
+- `echo hello world`
+- `write hello world`
+
+### Variables
+
+- `create a variable called score equal to 10`
+- `make variable score equals 10`
+- `set score = 10`
+- `define score equal to 10`
+- `declare variable score equal 10`
+
+### Input
+
+- `ask for name`
+- `input name`
+- `get name with prompt Enter your name`
+
+### Math
+
+- `add 5 to score`
+- `subtract 2 from score`
+- `multiply 3 by score`
+- `divide 2 by score`
+- `increase score by 1`
+- `decrease score by 1`
+
+### Conditions
+
+- `if age is greater than 18 then print adult`
+- `if age is less than 18 then print minor`
+- `if age is equal to 18 then print adult`
+- `if age is not equal to 18 then print different`
+- `if age is at least 18 then print adult`
+- `if age is at most 18 then print adult`
+
+### Loops
+
+- `repeat 5 times print hello`
+- `loop 5 times print hello`
+- `run 5 x print hello`
+- `while score is less than 10 then print waiting`
+
+### Utilities
+
+- `wait 2 seconds`
+- `sleep 1 second`
+- `pause 3 seconds`
+- `generate random number from 1 to 100`
+- `generate random number from 1 to 100 and store it in number`
+- `clear`
+- `comment: this is my program`
+
+### SQL
+
+- `create table users with id integer, name varchar(100)`
+- `make a table products having id integer, price decimal(10,2)`
+
+## Multiple commands
+
+Put commands on separate lines or separate them with semicolons:
+
+```
+set score equal to 10
+increase score by 5
+if score is at least 15 then print high score
+```
+
+or:
+
+```
+set score equal to 10; increase score by 5; print done
+```
+
+## What this project is and is not
+
+ULC is a command-based deterministic translator, not a general-purpose AI coding assistant. This is intentional. It means the same input follows the same parser rules every time and there is no local model to install.
+
+The parser and target backends are separate, so adding a new English command means adding an intermediate operation and its translations rather than adding an AI dependency.
 
 Generated code is never executed automatically. Review and test it before compiling or running it.
+
+## Project structure
+
+- `core/parser.py` — understands English command patterns.
+- `core/ir.py` — stores the common intermediate representation.
+- `core/translator.py` — runs parsing, validation, and target generation.
+- `targets/` — the 10 language backends.
+- `web.py` — Chrome/browser interface.
+- `cli/` — command-line interface.
+- `tests/` — automated tests.
+- `START.bat` — simple Windows launcher.
+
+## Troubleshooting
+
+### Chrome does not open
+
+Open the printed local address manually. The server only listens on your own computer.
+
+### A command is not recognized
+
+Check the supported command list above. ULC does not use AI fallback. If you want a new phrase supported, add a deterministic parser rule and a test.
+
+### Generated code is not what you expected
+
+Check the exact English wording and target language. ULC translates the supported operation into a target-language template; it does not infer an unlimited software design.
 
 ## License
 
 MIT.
-
-
-## Broad English mode
-
-The original deterministic parser is still included for fast, predictable simple commands. For normal English requests such as "build a calculator", "make a to-do app", "create a game", or other larger descriptions, the browser can use a local coding AI through Ollama.
-
-On Windows, run setup_ai.bat once. It installs Ollama when possible and downloads the local coding model. Then run the project normally.
-
-The local AI runs on your computer instead of sending your code request to a paid cloud API. Because AI-generated code can contain mistakes, review and test generated code before running it.
-
-## Run in VS Code
-1. Open this repository folder in VS Code.
-2. Install the recommended Python extension.
-3. Install the project with python -m pip install -e .
-4. Press F5 and choose Run Universal Language Compiler.
-5. Chrome opens automatically.
-6. Type what you want to build.
-7. Pick the programming language from the dropdown.
-8. Press GENERATE CODE and copy the result.
-
-You do not need to use the terminal for normal use anymore. The browser is the main interface.
-
-
-## Browser mode (the normal way to use ULC)
-
-The Universal Language Compiler now has a browser interface. You can use normal English instead of memorizing special commands.
-
-### Start it
-
-1. Open the repository in VS Code.
-2. Install the project:
-   `python -m pip install -e .`
-3. Press **F5** and choose **Run Universal Language Compiler**.
-4. Chrome opens automatically.
-5. Type what you want to build.
-6. Select the programming language.
-7. Press **GENERATE CODE**.
-
-The terminal is still available for developers, but you do not need it for normal use.
-
-## Broad English mode
-
-The original deterministic compiler handles simple instructions quickly and predictably. When an instruction is more complex or does not match those rules, ULC can use an optional **local coding AI through Ollama**.
-
-This means requests can be written as normal English, for example:
-
-- "Build a calculator with add, subtract, multiply, and divide."
-- "Create a to-do app with tasks I can add, edit, and delete."
-- "Make a Python game where the player collects coins."
-- "Create a website with a home page, login page, and dashboard."
-- "Write a program that reads a CSV file and calculates statistics."
-
-### Set up the local AI on Windows
-
-Run:
-
-`setup_ai.bat`
-
-once from the repository folder. It installs Ollama when possible and downloads the configured local coding model.
-
-The default model is `qwen2.5-coder:3b`. You can change it with the `ULC_OLLAMA_MODEL` environment variable.
-
-The local AI runs on your own computer rather than sending the programming request to a paid cloud API.
-
-### Important
-
-AI-generated code can contain mistakes. **Always review and test generated code before running it.** ULC does not automatically execute generated programs.
-
-Never put passwords, API keys, access tokens, or private tokens into prompts or generated source code.
-
-## Zero-setup start on Windows
-
-For normal use, you should not need to manually install Python packages or Ollama.
-
-**Just double-click START.bat.**
-
-It will:
-1. Check for Python.
-2. Install Python 3.12 for your Windows user if it is missing and Windows Package Manager is available.
-3. Install the compiler.
-4. Check for Ollama and install it if needed.
-5. Download the local coding model when needed.
-6. Start the compiler.
-7. Open Chrome automatically.
-
-After the first setup, future starts are simply another double-click on START.bat.
-
