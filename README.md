@@ -60,3 +60,51 @@ The local AI runs on your computer instead of sending your code request to a pai
 8. Press GENERATE CODE and copy the result.
 
 You do not need to use the terminal for normal use anymore. The browser is the main interface.
+
+
+## Browser mode (the normal way to use ULC)
+
+The Universal Language Compiler now has a browser interface. You can use normal English instead of memorizing special commands.
+
+### Start it
+
+1. Open the repository in VS Code.
+2. Install the project:
+   `python -m pip install -e .`
+3. Press **F5** and choose **Run Universal Language Compiler**.
+4. Chrome opens automatically.
+5. Type what you want to build.
+6. Select the programming language.
+7. Press **GENERATE CODE**.
+
+The terminal is still available for developers, but you do not need it for normal use.
+
+## Broad English mode
+
+The original deterministic compiler handles simple instructions quickly and predictably. When an instruction is more complex or does not match those rules, ULC can use an optional **local coding AI through Ollama**.
+
+This means requests can be written as normal English, for example:
+
+- "Build a calculator with add, subtract, multiply, and divide."
+- "Create a to-do app with tasks I can add, edit, and delete."
+- "Make a Python game where the player collects coins."
+- "Create a website with a home page, login page, and dashboard."
+- "Write a program that reads a CSV file and calculates statistics."
+
+### Set up the local AI on Windows
+
+Run:
+
+`setup_ai.bat`
+
+once from the repository folder. It installs Ollama when possible and downloads the configured local coding model.
+
+The default model is `qwen2.5-coder:3b`. You can change it with the `ULC_OLLAMA_MODEL` environment variable.
+
+The local AI runs on your own computer rather than sending the programming request to a paid cloud API.
+
+### Important
+
+AI-generated code can contain mistakes. **Always review and test generated code before running it.** ULC does not automatically execute generated programs.
+
+Never put passwords, API keys, access tokens, or private tokens into prompts or generated source code.
